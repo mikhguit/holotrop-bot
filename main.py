@@ -70,7 +70,7 @@ def get_main_keyboard():
     builder.add(KeyboardButton(text="❓ Частые вопросы"))
     builder.add(KeyboardButton(text="📅 Расписание мероприятий"))
     builder.add(KeyboardButton(text="📚 Больше информации"))
-    builder.add(KeyboardButton(text="✍️ Записаться"))
+    builder.add(KeyboardButton(text="✅ ЗАПИСАТЬСЯ ✅"))
     builder.add(KeyboardButton(text="🗑 Очистить чат"))
     builder.adjust(1, 1, 1, 1, 1, 1, 1, 1)
     return builder.as_markup(resize_keyboard=True)
@@ -79,41 +79,41 @@ def get_hd_keyboard():
     """Клавиатура для Холотропного дыхания"""
     builder = InlineKeyboardBuilder()
     builder.button(text="❓ Частые вопросы", callback_data="faq_menu")
-    builder.button(text="✍️ Записаться", url="https://t.me/alla_ananeva")
+    builder.button(text="✅ ЗАПИСАТЬСЯ ✅", url="https://t.me/alla_ananeva")
     builder.button(text="🏠 В главное меню", callback_data="menu")
-    builder.adjust(3)
+    builder.adjust(1)
     return builder.as_markup()
 
 def get_leader_keyboard():
     """Клавиатура для О Ведущем"""
     builder = InlineKeyboardBuilder()
-    builder.button(text="✍️ Записаться", url="https://t.me/alla_ananeva")
+    builder.button(text="✅ ЗАПИСАТЬСЯ ✅", url="https://t.me/alla_ananeva")
     builder.button(text="🏠 В главное меню", callback_data="menu")
-    builder.adjust(2)
+    builder.adjust(1)
     return builder.as_markup()
 
 def get_schedule_keyboard():
     """Клавиатура для Расписания"""
     builder = InlineKeyboardBuilder()
-    builder.button(text="✍️ Записаться", url="https://t.me/alla_ananeva")
-    builder.button(text="🌬 Холотропное", callback_data="event_holo")
+    builder.button(text="✅ ЗАПИСАТЬСЯ ✅", url="https://t.me/alla_ananeva")
+    builder.button(text="🌬 Холотропное дыхание", callback_data="event_holo")
     builder.button(text="🏕 Другая реальность", callback_data="event_weekend")
     builder.button(text="🏔 Алтай", callback_data="event_altai")
     builder.button(text="🌊 Тургояк", callback_data="event_turgoyak")
     builder.button(text="⚰ Закапывание", callback_data="event_burial")
     builder.button(text="🏠 В главное меню", callback_data="menu")
-    builder.adjust(2, 2, 2, 1)
+    builder.adjust(1)
     return builder.as_markup()
 
 def get_faq_keyboard():
     """Клавиатура для Частых вопросов"""
     builder = InlineKeyboardBuilder()
     faq_questions = [
-        ("🔄 Как проходит тренинг", "faq_1"),
-        ("📚 Нужна ли подготовка", "faq_2"),
-        ("👥 Почему в группе", "faq_3"),
-        ("⏱ Можно ли 1 день", "faq_4"),
-        ("😰 А если мне страшно", "faq_5"),
+        ("🔄 Как проходит тренинг ?", "faq_1"),
+        ("📚 Нужна ли подготовка ?", "faq_2"),
+        ("👥 Почему в группе ?", "faq_3"),
+        ("⏱ Можно ли 1 день ?", "faq_4"),
+        ("😰 А если мне страшно ?", "faq_5"),
     ]
     for text, callback in faq_questions:
         builder.button(text=text, callback_data=callback)
@@ -124,9 +124,25 @@ def get_faq_keyboard():
 def get_info_keyboard():
     """Клавиатура для Больше информации"""
     builder = InlineKeyboardBuilder()
-    builder.button(text="🌐 Сайт", url="https://www.sergeyananyev.ru")
+    builder.button(text="✅ ЗАПИСАТЬСЯ ✅", url="https://t.me/alla_ananeva")
     builder.button(text="🏠 В главное меню", callback_data="menu")
-    builder.adjust(2)
+    builder.adjust(1)
+    return builder.as_markup()
+
+def get_event_universal_keyboard():
+    """Универсальная клавиатура для всех мероприятий (2 кнопки)"""
+    builder = InlineKeyboardBuilder()
+    builder.button(text="✅ ЗАПИСАТЬСЯ ✅", url="https://t.me/alla_ananeva")
+    builder.button(text="🏠 В главное меню", callback_data="menu")
+    builder.adjust(1)  
+    return builder.as_markup()
+
+def get_faq_answer_keyboard():
+    """Универсальная клавиатура для ответов на вопросы FAQ"""
+    builder = InlineKeyboardBuilder()
+    builder.button(text="✅ ЗАПИСАТЬСЯ ✅", url="https://t.me/alla_ananeva")
+    builder.button(text="🏠 В главное меню", callback_data="menu")
+    builder.adjust(1, 1)  # Каждая кнопка в своём ряду
     return builder.as_markup()
 
 # ============================================================
@@ -137,8 +153,8 @@ def get_info_keyboard():
 async def cmd_start(message: types.Message):
     """Команда /start"""
     msg = await message.answer(
-        f"Привет, {message.from_user.first_name}! 🙏\n\n"
-        f"Я бот-помощник по Холотропному дыханию.\n"
+        f"Привет, {message.from_user.first_name} 👋\n\n"
+        f"Я бот-помощник тренинг-клуба «Моя Вселенная».\n"
         f"Выберите раздел в меню 👇",
         reply_markup=get_main_keyboard()
     )
@@ -196,7 +212,7 @@ async def show_info(message: types.Message):
     msg = await message.answer(text, parse_mode="HTML", reply_markup=get_info_keyboard())
     save_message_id(message.chat.id, msg.message_id)
 
-@dp.message(F.text == "✍️ Записаться")
+@dp.message(F.text == "✅ ЗАПИСАТЬСЯ ✅")
 async def show_signup(message: types.Message):
     """Записаться"""
     text = "✍️ <b>Запись на мероприятия</b>\n\nДля записи свяжитесь с организатором:\n\n📞 +7-922-108-83-23\n✏️ @alla_ananeva\n🌐 www.sergeyananyev.ru"
@@ -248,17 +264,76 @@ async def back_to_faq(callback: types.CallbackQuery):
 
 @dp.callback_query(F.data.startswith("faq_"))
 async def process_faq(callback: types.CallbackQuery):
-    """Ответы на вопросы FAQ"""
+    """Ответы на вопросы FAQ с кнопками"""
     num = callback.data.replace("faq_", "")
     text = load_faq_text(f"question{num}.txt")
-    msg = await callback.message.answer(text, parse_mode="HTML")
+    
+    msg = await callback.message.answer(
+        text, 
+        parse_mode="HTML",
+        reply_markup=get_faq_answer_keyboard()  # ← Добавлена клавиатура
+    )
     save_message_id(callback.message.chat.id, msg.message_id)
     await callback.answer()
 
-@dp.callback_query(F.data.startswith("event_"))
-async def process_event(callback: types.CallbackQuery):
-    """Переход к мероприятиям"""
-    await callback.message.answer("ℹ️ Подробная информация в разделе «Расписание мероприятий»", reply_markup=get_schedule_keyboard())
+@dp.callback_query(F.data == "event_holo")
+async def show_event_holo(callback: types.CallbackQuery):
+    """Холотропное дыхание"""
+    text = load_text("hd_description.txt")
+    msg = await callback.message.answer(
+        text, 
+        parse_mode="HTML", 
+        reply_markup=get_event_universal_keyboard()
+    )
+    save_message_id(callback.message.chat.id, msg.message_id)
+    await callback.answer()
+
+@dp.callback_query(F.data == "event_weekend")
+async def show_event_weekend(callback: types.CallbackQuery):
+    """Другая реальность / Weekend"""
+    text = load_text("weekend.txt")
+    msg = await callback.message.answer(
+        text, 
+        parse_mode="HTML", 
+        reply_markup=get_event_universal_keyboard()
+    )
+    save_message_id(callback.message.chat.id, msg.message_id)
+    await callback.answer()
+
+@dp.callback_query(F.data == "event_altai")
+async def show_event_altai(callback: types.CallbackQuery):
+    """Алтай"""
+    text = load_text("altai.txt")
+    msg = await callback.message.answer(
+        text, 
+        parse_mode="HTML", 
+        reply_markup=get_event_universal_keyboard()
+    )
+    save_message_id(callback.message.chat.id, msg.message_id)
+    await callback.answer()
+
+@dp.callback_query(F.data == "event_turgoyak")
+async def show_event_turgoyak(callback: types.CallbackQuery):
+    """Тургояк"""
+    text = load_text("turgoyak.txt")
+    msg = await callback.message.answer(
+        text, 
+        parse_mode="HTML", 
+        reply_markup=get_event_universal_keyboard()
+    )
+    save_message_id(callback.message.chat.id, msg.message_id)
+    await callback.answer()
+
+@dp.callback_query(F.data == "event_burial")
+async def show_event_burial(callback: types.CallbackQuery):
+    """Закапывание в землю"""
+    text = load_text("burial.txt")
+    msg = await callback.message.answer(
+        text, 
+        parse_mode="HTML", 
+        reply_markup=get_event_universal_keyboard()
+    )
+    save_message_id(callback.message.chat.id, msg.message_id)
     await callback.answer()
 
 # ============================================================
