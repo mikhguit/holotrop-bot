@@ -188,8 +188,12 @@ async def show_leader(message: types.Message):
 @dp.message(F.text == "💰 Стоимость участия")
 async def show_price(message: types.Message):
     """Стоимость участия"""
-    text = "💰 <b>Стоимость участия</b>\n\nИнформация о стоимости доступна на сайте или у организатора.\n\n📞 +7-922-108-83-23\n✏️ @alla_ananeva"
-    msg = await message.answer(text, parse_mode="HTML", reply_markup=get_leader_keyboard())
+    text = load_text("price.txt")  # ← Загрузка из файла
+    msg = await message.answer(
+        text, 
+        parse_mode="HTML", 
+        reply_markup=get_leader_keyboard()
+    )
     save_message_id(message.chat.id, msg.message_id)
 
 @dp.message(F.text == "❓ Частые вопросы")
@@ -242,7 +246,7 @@ async def clear_chat(message: types.Message):
     
     msg = await message.answer(
         f"✅ Чат очищен! Удалено: {deleted_count}\n\n"
-        f"Привет, {message.from_user.first_name}! 🙏\nВыберите раздел 👇",
+        f"Привет, {message.from_user.first_name} 👋\nВыберите раздел 👇",
         reply_markup=get_main_keyboard()
     )
     save_message_id(user_id, msg.message_id)
